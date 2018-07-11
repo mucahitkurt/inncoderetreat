@@ -23,14 +23,20 @@ public class Board {
 
         for (Point point : habitat.getMembers()) {
             for (Point neigbour : habitat.getMemberWithNeigbours(point).getMembers()) {
-                if (habitat.livingMembersCount(neigbour) == 3) {
-                    newGenerationHabitat.place(neigbour);
-                } else if (habitat.livingMembersCount(neigbour) == 4 && habitat.isAlive(neigbour)) {
+                if (isAliveAtNextGeneration(habitat, neigbour)) {
                     newGenerationHabitat.place(neigbour);
                 }
             }
         }
 
         this.habitat = newGenerationHabitat;
+    }
+
+    private boolean isAliveAtNextGeneration(Habitat habitat, Point neigbour) {
+        if (habitat.livingMembersCount(neigbour) == 3) {
+            return true;
+        }
+
+        return habitat.livingMembersCount(neigbour) == 4 && habitat.isAlive(neigbour);
     }
 }

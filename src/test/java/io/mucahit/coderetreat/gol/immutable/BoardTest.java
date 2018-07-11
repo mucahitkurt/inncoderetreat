@@ -24,16 +24,40 @@ public class BoardTest {
         assertEquals(0, newBoard.getHabitat().getMembersCount());
     }
 
+    @Test
+    public void blinker() {
+
+        Board board = generateBoard("ooo\n***\nooo");
+
+        assertEquals(3, board.getHabitat().getMembersCount());
+        board = board.advance();
+        assertEquals(3, board.getHabitat().getMembersCount());
+        board = board.advance();
+        assertEquals(3, board.getHabitat().getMembersCount());
+    }
+
+    @Test
+    public void beacon() {
+        Board board = generateBoard("**oo\n**oo\noo**\noo**");
+        final Board boardNext = generateBoard("**oo\n*ooo\nooo*\noo**");
+        assertEquals(8, board.getHabitat().getMembersCount());
+        board = board.advance();
+        assertEquals(board.getHabitat().getMembers(), boardNext.getHabitat().getMembers());
+        assertEquals(6, board.getHabitat().getMembersCount());
+        board = board.advance();
+        assertEquals(8, board.getHabitat().getMembersCount());
+    }
+
     private Board generateBoard(String pattern) {
 
         var x = 0;
         var y = 0;
 
-        Set<Point> members = new HashSet<>();
+        Habitat habitat = new Habitat();
 
         for (char c : pattern.toCharArray()) {
             if (c == '*') {
-                members.add(new Point(x, y));
+                habitat = habitat.place(new Point(x, y));
                 x++;
             } else if (c == '\n') {
                 x = 0;
@@ -43,6 +67,6 @@ public class BoardTest {
             }
         }
 
-        return new Board(new Habitat(members));
+        return new Board(habitat);
     }
 }
