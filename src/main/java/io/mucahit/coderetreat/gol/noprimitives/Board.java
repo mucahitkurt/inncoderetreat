@@ -22,12 +22,15 @@ public class Board {
         Habitat newGenerationHabitat = new Habitat();
 
         for (Point point : habitat.getMembers()) {
-            if (habitat.getMemberWithNeigbours(point).liveMembersCount() == 3) {
-                habitat.place(point);
-            } else if (habitat.getMemberWithNeigbours(point).liveMembersCount() == 4) {
-                
+            for (Point neigbour : habitat.getMemberWithNeigbours(point).getMembers()) {
+                if (habitat.livingMembersCount(neigbour) == 3) {
+                    newGenerationHabitat.place(neigbour);
+                } else if (habitat.livingMembersCount(neigbour) == 4 && habitat.isAlive(neigbour)) {
+                    newGenerationHabitat.place(neigbour);
+                }
             }
         }
 
+        this.habitat = newGenerationHabitat;
     }
 }

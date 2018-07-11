@@ -1,6 +1,5 @@
 package io.mucahit.coderetreat.gol.noprimitives;
 
-import io.mucahit.coderetreat.gol.noprimitives.Habitat;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -33,6 +32,9 @@ class HabitatTest {
         final Point point = new Point(0, 0);
         habitat.place(point);
         assertEquals(9, habitat.getMemberWithNeigbours(point).getMembersCount());
+        final Point point2 = new Point(1, 2);
+        habitat.place(point2);
+        assertEquals(9, habitat.getMemberWithNeigbours(point2).getMembersCount());
     }
 
     @Test
@@ -41,9 +43,14 @@ class HabitatTest {
         Habitat habitat = new Habitat();
         final Point point = new Point(0, 1);
         habitat.place(point);
-        assertEquals(1, habitat.liveMembersCount());
+        assertEquals(1, habitat.livingMembersCount(new Point(0,1)));
 
         habitat.place(new Point(0,2));
-        assertEquals(2, habitat.liveMembersCount());
+        assertEquals(2, habitat.livingMembersCount(new Point(0,1)));
+
+        habitat.place(new Point(0,0));
+        assertEquals(3, habitat.livingMembersCount(new Point(0,1)));
     }
+
+
 }

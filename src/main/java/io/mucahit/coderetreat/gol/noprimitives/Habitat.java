@@ -34,21 +34,24 @@ public class Habitat {
         return memberWithNeighbours;
     }
 
-    public int liveMembersCount() {
-        Habitat habitatWithLivingMembers = new Habitat();
-        for (Point member : members) {
-            if (isAlive(member)) {
-                habitatWithLivingMembers.place(member);
-            }
-        }
-        return habitatWithLivingMembers.getMembersCount();
-    }
-
-    private boolean isAlive(Point point) {
+    public boolean isAlive(Point point) {
         return members.contains(point);
     }
 
     public Set<Point> getMembers() {
         return members;
+    }
+
+    public int livingMembersCount(Point point) {
+
+        final Habitat memberWithNeigbours = getMemberWithNeigbours(point);
+        final Habitat subHabitatForLivingCells = new Habitat();
+        for (Point point1 : memberWithNeigbours.getMembers()) {
+            if (isAlive(point1)) {
+                subHabitatForLivingCells.place(point1);
+            }
+        }
+
+        return subHabitatForLivingCells.getMembersCount();
     }
 }
