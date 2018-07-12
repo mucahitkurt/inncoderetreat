@@ -1,9 +1,10 @@
 package io.mucahit.coderetreat.gol.noloop;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author mucahitkurt
@@ -53,16 +54,21 @@ public class Habitat {
 
     public HabitatPoint livenessAwarePoint(final Point point) {
 
-        final var aliveMemberCount = new AtomicInteger(0);
-
-        getMemberWithNeighbours(point).getMembers().forEach(point1 -> {
-            aliveMemberCount.addAndGet(new LivenessCheck().livenessAwarePoint(this.members.contains(point1), point1).livenessConstant());
-        });
+        final var aliveMemberCount = countAliveNeighbours(new ArrayList<>(getMemberWithNeighbours(point).getMembers()));
 
         final HabitatPoint habitatPoint = new LivenessCheck().livenessAwarePoint(this.members.contains(point), point);
-        habitatPoint.aliveNeighbours = aliveMemberCount.get();
+        habitatPoint.aliveNeighbours = aliveMemberCount;
 
         return habitatPoint;
+    }
+
+    private int countAliveNeighbours(List<Point> members) {
+        if (members.isEmpty()) {
+            return 0;
+        }
+
+        final Point point = members.remove(0);
+        return new LivenessCheck().livenessAwarePoint(this.members.contains(point), point).livenessConstant() + countAliveNeighbours(members);
     }
 
     public void trim() {
