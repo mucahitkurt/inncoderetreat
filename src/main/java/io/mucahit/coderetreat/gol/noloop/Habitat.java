@@ -2,7 +2,6 @@ package io.mucahit.coderetreat.gol.noloop;
 
 import java.awt.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,13 +23,28 @@ public class Habitat {
 
     public Habitat getMemberWithNeighbours(Point point) {
 
-        Habitat subHabitatWithNeighbours = new Habitat();
-
-        List.of(-1, 0, 1).forEach(x ->
-                List.of(-1, 0, 1).forEach(y ->
-                        subHabitatWithNeighbours.place(new Point(point.x + x, point.y + y))));
+        final Habitat subHabitatWithNeighbours = new Habitat();
+        subHabitatWithNeighbours.placeAll(getNeighboursForRow(new Point(point.x - 1, point.y - 1), -1).getMembers());
+        subHabitatWithNeighbours.placeAll(getNeighboursForRow(new Point(point.x - 1, point.y), -1).getMembers());
+        subHabitatWithNeighbours.placeAll(getNeighboursForRow(new Point(point.x - 1, point.y + 1), -1).getMembers());
 
         return subHabitatWithNeighbours;
+    }
+
+    private Habitat getNeighboursForRow(Point point, int x) {
+
+        final Habitat habitat = new Habitat();
+        if (x > 1) {
+            return habitat;
+        }
+
+        habitat.place(point);
+        habitat.placeAll(getNeighboursForRow(new Point(point.x + 1, point.y), ++x).getMembers());
+        return habitat;
+    }
+
+    private void placeAll(Set<Point> members) {
+        this.members.addAll(members);
     }
 
     public Set<Point> getMembers() {
@@ -39,10 +53,9 @@ public class Habitat {
 
     public HabitatPoint livenessAwarePoint(final Point point) {
 
-        final Habitat memberWithNeigbours = getMemberWithNeighbours(point);
         final var aliveMemberCount = new AtomicInteger(0);
 
-        memberWithNeigbours.getMembers().forEach(point1 -> {
+        getMemberWithNeighbours(point).getMembers().forEach(point1 -> {
             aliveMemberCount.addAndGet(new LivenessCheck().livenessAwarePoint(this.members.contains(point1), point1).livenessConstant());
         });
 
