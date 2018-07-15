@@ -1,4 +1,4 @@
-package io.mucahit.coderetreat.gol.noloop;
+package io.mucahit.coderetreat.gol.noloopnoconditionals;
 
 import org.junit.jupiter.api.Test;
 
